@@ -9,15 +9,15 @@ author: # Add name author (optional)
 ---
 Spiking neuron networks (SNNs) are biologically inspired networks, which have received increasing attention due to their efficient computation. During their development, many mathematical models have been proposed to describe neuron behavior. The most widely used neuron model for SNN is the Leaky Integrate-and-Fire (LIF) model, which uses simple differential equations to describe the membrane potential  behavior of neurons. Its format of explicit iteration is governed by
 
+$ v_{temp}(t+1)=\alpha*v(t)+Ws(t) $
 
-$ v_{temp}(t+1)=v(t)+Ws(t) $
+where $v$ and $v_{temp}$ is the membrane potential, $\alpha$ means the decay factor, $W$ denotes the synapse weight, and $s$ denotes the spike input at time t.
 
-When the membrane potential exceeds the pre-defined threshold $V_{th}$, it would produce a spike output
+When the membrane potential exceeds the pre-defined threshold $V_{th}$, it would produce a spike output $\theta$, and the membrane potential will decrease by two reset mechanisms:
 
-$s'(t)=\begin{cases}
-\theta & \text{ if } v_{temp}(t+1)\geq V_{th} \\ 
-0 & \text{otherwise}
-\end{cases}$
+soft reset: $v(t+1)=v_{temp}(t+1)-V_{th}$
+hard reset: $v(t+1)=v_{temp}(t+1)*(1-\theta)$
+
 
 To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
 
