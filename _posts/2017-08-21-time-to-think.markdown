@@ -15,8 +15,7 @@ where $v$ and $v_{temp}$ is the membrane potential, $\alpha$ means the decay fac
 
 When the membrane potential exceeds the pre-defined threshold $V_{th}$, it would produce a spike output $\theta$, and the membrane potential will decrease by two reset mechanisms:
 
-soft reset: $v(t+1)=v_{temp}(t+1)-V_{th}$
-
+soft reset: $v(t+1)=v_{temp}(t+1)-V_{th}$  
 hard reset: $v(t+1)=v_{temp}(t+1)*(1-\theta)$
 
 
