@@ -7,7 +7,9 @@ img: post-5.jpg # Add image post (optional)
 tags: [Blog, Meditation]
 author: # Add name author (optional)
 ---
+## SNN model
 Spiking neuron networks (SNNs) are biologically inspired networks, which have received increasing attention due to their efficient computation. During their development, many mathematical models have been proposed to describe neuron behavior. The most widely used neuron model for SNN is the Leaky Integrate-and-Fire (LIF) model, which uses simple differential equations to describe the membrane potential  behavior of neurons. Its format of explicit iteration is governed by
+
 
 $ v_{temp}(t+1)=\alpha*v(t)+Ws(t) $
 
@@ -15,8 +17,20 @@ where $v$ and $v_{temp}$ is the membrane potential, $\alpha$ means the decay fac
 
 When the membrane potential exceeds the pre-defined threshold $V_{th}$, it would produce a spike output $\theta$, and the membrane potential will decrease by two reset mechanisms:
 
-soft reset: $v(t+1)=v_{temp}(t+1)-V_{th}$  
+soft reset: $v(t+1)=v_{temp}(t+1)-V_{th}$
 hard reset: $v(t+1)=v_{temp}(t+1)*(1-\theta)$
+
+## works
+The major bottleneck of the spiking neuron network is how to acquire a well-performance SNN, especially on a complex dataset, since directly using the backpropagation algorithm is not suitable for SNN.  
+Currently, two ways can effectively obtain excellent SNNs: surrogate gradient and ANN to SNN. ANN to SNN means converting a well-performed source ANN to a target SNN. Surrogate gradient methods use a soft relaxed function to replace the hard step function and train SNN by BPTT.
+
+### ANN to SNN
+In this subsection, We use the soft reset and IF model ($\alpha=1$) to reduce the information loss between the source ANN and target SNN. Our approach is based on threshold-balancing method, which contain three steps:  
+1. Train the source ANN that only contains Convolutional, average pooling, fully connected layer, and ReLU activation function. Record the maximum activation of each layer.
+2. Copy the network parameter to target SNN and replace the ReLU function with the IF model. The threshold of each layer is setting to the maximum activation.
+3. Run the target SNN with enough simulation length to achieve acceptable accuracy.  
+
+The converted SNN needs thousands of simulation time to achieve the same accuracy as source ANN, which does not meet the high-efficiency characteristics. So Our work is to explore how to obtain higher accuracy, and lower inference latency converted SNN.  
 
 
 To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
