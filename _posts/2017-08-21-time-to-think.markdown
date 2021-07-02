@@ -66,7 +66,7 @@ for l=1 to L do
 end for
 {% endhighlight %}
 
-**Weight calibration (WC).** The layer-wise conversion can be written as $e^l = x^l - \bar{s}^l$. Then we need to minimize the formulation $\min_{w^l} || e^l ||^2$ via stochastic gradient descent.
+**Weight calibration (WC).** The layer-wise conversion can be written as $e^l = x^l - \bar{s}^l$. Then we need to minimize the formulation $\min_{w^l} \left \| e^l \right \|^2$ via stochastic gradient descent.
 
 
 To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
