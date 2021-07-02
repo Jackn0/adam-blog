@@ -50,7 +50,10 @@ end for
 
 #### Reduce the output error layer-by-layer  
 The previous method does not rely on real data statistics. It is made by a strong assumption that activation is uniformly distributed. In fact, we can get a better bias increment by analyzing the distribution of some training samples. Here, we propose two methods to calibrate the SNN's bias and weight, respectively layer-by-layer.  
-**Bias correction (BC)**
+**Bias correction (BC).** In order to calibrate the bias, we first define a reduced mean function:  
+$\mu_c(x)=\frac{1}{wh}\sum_{i=1}^{w}\sum_{j=1}^{h}x_{c,i,j}$  
+where w,h are the width and height of the feature-map, so $\mu_c(x)$ computes the spatial mean of the feature-map in each channel c. The spatial mean of conversion error can be written by:  
+$\mu_c (e^l) = \mu_c (x^l)-\mu_c(\bar{s}^l)$
 
 
 To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
