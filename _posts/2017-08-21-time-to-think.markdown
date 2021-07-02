@@ -32,12 +32,12 @@ In this subsection, We use the soft reset and IF model ($\alpha=1$) to reduce th
 
 The converted SNN needs thousands of simulation time to achieve the same accuracy as source ANN, which does not meet the high-efficiency characteristics. So our work is to explore how to obtain higher accuracy, and lower inference latency converted SNN.  
 
-#### Layer-wise conversion error
-We split the conversion error into clipping error and flooring error. When the source ANN activation is larger than $V_{th}$, the SNN neuron's output is smaller than the output of the source neuron (clipping). And the reason for the flooring error is that SNN can't send accurate values to the next layer. The threshold balancing method can eliminate the clipping error since it uses maximum activation as the threshold. However, it also will increase the flooring error, which can be reduced by increasing simulation length. [Here](https://openreview.net/forum?id=FZ1oTwcXchK), we first find an equation to approximate the target SNN's spike frequency:
+#### [Layer-wise conversion error](https://openreview.net/forum?id=FZ1oTwcXchK)
+We split the conversion error into clipping error and flooring error. When the source ANN activation is larger than $V_{th}$, the SNN neuron's output is smaller than the output of the source neuron (clipping). And the reason for the flooring error is that SNN can't send accurate values to the next layer. The threshold balancing method can eliminate the clipping error since it uses maximum activation as the threshold. However, it also will increase the flooring error, which can be reduced by increasing simulation length. Here, we first find an equation to approximate the target SNN's spike frequency:
 
 $\bar{s}^{l+1} = V_{th}/T \cdot clip(\left \lfloor (T/V_{th}) \cdot W^l \bar{s}^l,0,T \right \rfloor)$
 
-Though analyze the output error between the source ANN and converted SNN, we decompose the conversion error into the output error of each layer. As a result, we can make the converted SNN closer to the source ANN by simply reducing the output error of each layer. Here we propose a method to reduce the flooring error: only to increase the SNN's bias by $V_{th}/2T$.
+**Bias shift.** Though analyze the output error between the source ANN and converted SNN, we decompose the conversion error into the output error of each layer. As a result, we can make the converted SNN closer to the source ANN by simply reducing the output error of each layer. Here we propose a method to reduce the flooring error: only to increase the SNN's bias by $V_{th}/2T$.
 
 {% highlight ruby %}
 for l=1 to L do 
@@ -48,8 +48,16 @@ end for
 {% endhighlight %}
 
 
-#### Reduce the output error layer-by-layer  
-The previous method does not rely on real data statistics. It is made by a strong assumption that activation is uniformly distributed. In fact, we can get a better bias increment by analyzing the distribution of some training samples. Here, we propose two methods to calibrate the SNN's bias and weight, respectively layer-by-layer.  
+#### [Layer-wise Caibration]()  
+
+**Adaptive threshold.** We found that threshold balancing will cause a considerable flooring error, especially when the simulation length is not enough, since it uses the maximum activation as the SNN's threshold. In practice, In practice, an Appropriate reduction of the threshold will increase the SNN performance.  
+Here, we minimize the optimization problem, which is formulated by
+
+$\min_{V_{th}} (clipfloor(x^l,T,V_{th}^l)-ReLU(x^l)).$
+
+We use a grid search with linarly sample N grids between $[0, max(x^l)]$ to determine the final result of $V_{th}^l$.
+
+The previous method bias shift does not rely on real data statistics. It is made by a strong assumption that activation is uniformly distributed. In fact, we can get a better bias increment by analyzing the distribution of some training samples. Here, we propose two methods to calibrate the SNN's bias and weight, respectively layer-by-layer.  
 **Bias correction (BC).** In order to calibrate the bias, we first define a reduced mean function:  
 $\mu_c(x)=\frac{1}{wh}\sum_{i=1}^{w}\sum_{j=1}^{h}x_{c,i,j}$  
 where $w$,$h$ are the width and height of the feature-map, so $\mu_c(x)$ computes the spatial mean of the feature-map in each channel c. The spatial mean of conversion error can be written by:  
