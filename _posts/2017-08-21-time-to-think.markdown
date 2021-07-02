@@ -60,10 +60,10 @@ $\mu_c (e^l) = \mu_c (x^l)-\mu_c(\bar{s}^l)$
 
 {% highlight ruby %}
 for l=1 to L do
-  SNN.layer[l].frequency = SNN.layer[l].output.sum(4) / T
   Layer[l].Error = ANN.layer[l].output - SNN.layer[l].frequency
   SNN.layer[l].bias <- SNN.layer[l].bias + Layer[l].Error.mean(0).mean(2).mean(3) # bias correct
   SNN.layer[l].mem <- SNN.layer[l].mean +  Layer[l].Error.mean(0) # potential correct  
+end for
 {% endhighlight %}
 
 **Weight calibration (WC).** The layer-wise conversion can be written as $e^l = x^l - \bar{s}^l$. Then we need to minimize the formulation $\min_{w^l} || e^l ||^2$ via stochastic gradient descent.
