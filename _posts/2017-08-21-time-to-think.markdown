@@ -37,7 +37,7 @@ We split the conversion error into clipping error and flooring error. When the s
 
 Though analyze the output error between the source ANN and converted SNN, we decompose the conversion error into the output error of each layer[Paper](https://openreview.net/forum?id=FZ1oTwcXchK):
 
-$\sum_l E[\Delta a^{'T}_lH_{a_l}\Delta a'_l]$
+$\sum_l E(\Delta a^{'T}_l H_{a_l} \Delta a'_l)$
 
 As a result, we can make the converted SNN closer to the source ANN by simply reducing the output error of each layer. Here we propose a simple method to reduce the flooring error: only to increase the SNN's bias by $V_{th}/2T$.
 
