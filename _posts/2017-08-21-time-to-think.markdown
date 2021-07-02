@@ -41,9 +41,9 @@ Though analyze the output error between the source ANN and converted SNN, we dec
 
 {% highlight ruby %}
 for l=1 to L do 
-SNN.layer[l].thresh<-ANN.layer[l].maximum_activation
-SNN.layer[l].weight<-ANN.layer[l].weight
-SNN.layer[l].bias<-ANN.layer[l].bias + SNN.layer[l].thresh / (2*T)
+  SNN.layer[l].thresh<-ANN.layer[l].maximum_activation
+  SNN.layer[l].weight<-ANN.layer[l].weight
+  SNN.layer[l].bias<-ANN.layer[l].bias + SNN.layer[l].thresh / (2*T)
 end for
 {% endhighlight %}
 
@@ -55,9 +55,19 @@ $\mu_c(x)=\frac{1}{wh}\sum_{i=1}^{w}\sum_{j=1}^{h}x_{c,i,j}$
 where $w$,$h$ are the width and height of the feature-map, so $\mu_c(x)$ computes the spatial mean of the feature-map in each channel c. The spatial mean of conversion error can be written by:  
 $\mu_c (e^l) = \mu_c (x^l)-\mu_c(\bar{s}^l)$
 
-**Weight calibration (WC).** The layer-wise conversion can be written as $e^l = x^l - \bar{s}^l$. Then we need to minimize the formulation below:  
-$\min_{w^l} \left \| e^l \right \|^2$  
-via stochastic gradient descent.
+**Potential correction (PC).** Potential is similar to bias correction. In this method we can directly set $v^l (0)$ to $T \times e^l$ to calibrate the initial potential.
+
+
+{% highlight ruby %}
+for l=1 to L do
+  SNN.layer[l].frequency = SNN.layer[l].output.sum(4) / T
+  Layer[l].Error = ANN.layer[l].output - SNN.layer[l].frequency
+  SNN.layer[l].bias <- SNN.layer[l].bias + Layer[l].Error.mean(0).mean(2).mean(3) # bias correct
+  SNN.layer[l].mem <- SNN.layer[l].mean +  Layer[l].Error.mean(0) # potential correct  
+{% endhighlight %}
+
+**Weight calibration (WC).** The layer-wise conversion can be written as $e^l = x^l - \bar{s}^l$. Then we need to minimize the formulation $\min_{w^l} || e^l ||^2$ via stochastic gradient descent.
+
 
 To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
 
