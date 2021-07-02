@@ -37,17 +37,19 @@ We split the conversion error into clipping error and flooring error. When the s
 
 $\bar{s}^{l+1} = V_{th}/T \cdot clip(\left \lfloor (T/V_{th}) \cdot W^l \bar{s}^l,0,T \right \rfloor)$
 
-Though analyze the output error between the source ANN and converted SNN, we decompose the conversion error into the output error of each layer:
+Though analyze the output error between the source ANN and converted SNN, we decompose the conversion error into the output error of each layer. As a result, we can make the converted SNN closer to the source ANN by simply reducing the output error of each layer. Here we propose a method to reduce the flooring error: only to increase the SNN's bias by $V_{th}/2T$.
 
-$\sum_l E[\Delta a^{'T}_l H_{a_l} \Delta a'_l]$
-
-As a result, we can make the converted SNN closer to the source ANN by simply reducing the output error of each layer. Here we propose a method to reduce the flooring error: only to increase the SNN's bias by $V_{th}/2T$.
-
-{% highlight ruby %} SNN.layer[l].weight<-ANN.layer[l].weight SNN.layer[l].bias<-ANN.layer[l].bias{% endhighlight %}
+{% highlight ruby %}
+for l=1 to L do 
+SNN.layer[l].thresh<-ANN.layer[l].maximum_activation
+SNN.layer[l].weight<-ANN.layer[l].weight
+SNN.layer[l].bias<-ANN.layer[l].bias + SNN.layer[l].thresh / (2*T)
+end for
+{% endhighlight %}
 
 
 #### Reduce the output error layer-by-layer  
-The previous method does not rely on real data statistics. It is made by a strong assumption that activation is uniformly distributed. In fact, we can get a better bias increment by analyzing the distribution of some training samples. Here, we propose two methods to calibrate the SNN's **bias** and **weight**, respectively layer-by-layer.  
+The previous method does not rely on real data statistics. It is made by a strong assumption that activation is uniformly distributed. In fact, we can get a better bias increment by analyzing the distribution of some training samples. Here, we propose two methods to calibrate the SNN's bias and weight, respectively layer-by-layer.  
 **Bias correction (BC)**
 
 
