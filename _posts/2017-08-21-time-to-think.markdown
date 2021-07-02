@@ -39,7 +39,7 @@ Though analyze the output error between the source ANN and converted SNN ([Paper
 
 {% highlight ruby %}
 SNN.layer[l].weight<-ANN.layer[l].weight
-SNN.layer[l].bias<-ANN.layer[l].bias
+SNN.layer[l].bias<-ANN.layer[l].bias + $V^l_{th}/2T$
 {% endhighlight %}
 
 
