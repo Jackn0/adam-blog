@@ -55,6 +55,9 @@ $\mu_c(x)=\frac{1}{wh}\sum_{i=1}^{w}\sum_{j=1}^{h}x_{c,i,j}$
 where $w$,$h$ are the width and height of the feature-map, so $\mu_c(x)$ computes the spatial mean of the feature-map in each channel c. The spatial mean of conversion error can be written by:  
 $\mu_c (e^l) = \mu_c (x^l)-\mu_c(\bar{s}^l)$
 
+**Weight calibration (WC).** The layer-wise conversion can be written as $e^l = x^l - \bar{s}^l$. Then we need to minimize the formulation below:  
+$\min_{w^l} \left \| e^l \right \|^2$  
+via stochastic gradient descent.
 
 To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
 
