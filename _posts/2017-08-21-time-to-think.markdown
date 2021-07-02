@@ -35,13 +35,16 @@ The converted SNN needs thousands of simulation time to achieve the same accurac
 ##### Layer-wise conversion error
 We split the conversion error into clipping error and flooring error. When the source ANN activation is larger than $V_{th}$, the SNN neuron's output is smaller than the output of the source neuron (clipping). And the reason for the flooring error is that SNN can't send accurate values to the next layer. The threshold balancing method can eliminate the clipping error since it uses maximum activation as the threshold. However, it also will increase the flooring error, which can be reduced by increasing simulation length.  
 
-Though analyze the output error between the source ANN and converted SNN, we decompose the conversion error into the output error of each layer[1](https://openreview.net/forum?id=FZ1oTwcXchK):
+Though analyze the output error between the source ANN and converted SNN, we decompose the conversion error into the output error of each layer[Paper](https://openreview.net/forum?id=FZ1oTwcXchK):
 
 $\sum_l E[\Delta a^{'T}_lH_{a_l}\Delta a'_l]$
 
 As a result, we can make the converted SNN closer to the source ANN by simply reducing the output error of each layer. Here we propose a simple method to reduce the flooring error: only to increase the SNN's bias by $V_{th}/2T$.
 
-{% highlight ruby %} SNN.layer[l].weight<-ANN.layer[l].weight SNN.layer[l].bias<-ANN.layer[l].bias{% endhighlight %}
+{% highlight ruby %}
+SNN.layer[l].weight<-ANN.layer[l].weight
+SNN.layer[l].bias<-ANN.layer[l].bias
+{% endhighlight %}
 
 
 To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
