@@ -37,9 +37,12 @@ We split the conversion error into clipping error and flooring error. When the s
 
 Though analyze the output error between the source ANN and converted SNN ([Paper](https://openreview.net/forum?id=FZ1oTwcXchK)), we decompose the conversion error into the output error of each layer. As a result, we can make the converted SNN closer to the source ANN by simply reducing the output error of each layer. Here we propose a simple method to reduce the flooring error: only to increase the SNN's bias by $V_{th}/2T$.
 
-{% highlight ruby %}
-SNN.layer[l].weight<-ANN.layer[l].weight
-SNN.layer[l].bias<-ANN.layer[l].bias + thresh[l] / (2 * T)
+{% highlight python %}
+for l=1 to L do
+  SNN.layer[l].thresh<-ANN.layer[l].maximum_activation
+  SNN.layer[l].weight<-ANN.layer[l].weight
+  SNN.layer[l].bias<-ANN.layer[l].bias + SNN.layer[l].thresh / (2 * T)
+end for
 {% endhighlight %}
 
 
