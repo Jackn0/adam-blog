@@ -57,14 +57,14 @@ $\min_{V_{th}} (clipfloor(x^l,T,V_{th}^l)-ReLU(x^l)).$
 
 We use a grid search with linarly sample N grids between $[0, max(x^l)]$ to determine the final result of $V_{th}^l$.
 
-The previous method bias shift does not rely on real data statistics. It is made by a strong assumption that activation is uniformly distributed. In fact, we can get a better bias increment by analyzing the distribution of some training samples. Here, we propose two methods to calibrate the SNN's bias and weight, respectively layer-by-layer.  
+The previous method bias shift does not rely on real data statistics. It is made by a strong assumption that activation is uniformly distributed. In fact, we can get a better bias increment by analyzing the distribution of some training samples. Here, we propose two methods to calibrate the SNN's bias and weight, respectively layer-by-layer.
+
 **Bias correction (BC).** In order to calibrate the bias, we first define a reduced mean function:  
 $\mu_c(x)=\frac{1}{wh}\sum_{i=1}^{w}\sum_{j=1}^{h}x_{c,i,j}$  
 where $w$,$h$ are the width and height of the feature-map, so $\mu_c(x)$ computes the spatial mean of the feature-map in each channel c. The spatial mean of conversion error can be written by:  
 $\mu_c (e^l) = \mu_c (x^l)-\mu_c(\bar{s}^l)$
 
 **Potential correction (PC).** Potential is similar to bias correction. In this method we can directly set $v^l (0)$ to $T \times e^l$ to calibrate the initial potential.
-
 
 {% highlight ruby %}
 for l=1 to L do
